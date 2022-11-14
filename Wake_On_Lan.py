@@ -118,14 +118,14 @@ def new_JSON():
             file_path = appdata_file + "/Server_starter/"
 
     with open( file_path + 'list.json', 'w') as file:
-        Server['Kaktus']={
-                "name": "Kaktus",
-                "ipAddress": "78.45.152.212",
-                "domain": "minecraft.kaktusgame.eu",
+        Server['name']={
+                "name": "YOUR_NAME",
+                "ipAddress": "YOUR_IP_ADDRESS",
+                "domain": "YOUR_DOMAIN",
                 "web": "No Web",
-                "macAddress": "1C:69:7A:63:A0:55",
-                "ports": "25565, 25566",
-                "wol": "28"
+                "macAddress": "YOUR_MAC_ADDRESS",
+                "ports": "OPEN_PORTS",
+                "wol": "WOL_PORT"
         }
         save = json.dumps(Server, indent=4)
         file.write(save)

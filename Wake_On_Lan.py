@@ -119,13 +119,13 @@ def new_JSON():
 
     with open( file_path + 'list.json', 'w') as file:
         Server['name']={
-                "name": "YOUR_NAME",
-                "ipAddress": "YOUR_IP_ADDRESS",
-                "domain": "YOUR_DOMAIN",
+                "name": "example_name",
+                "ipAddress": "127.0.0.1",
+                "domain": "example_domain.cz",
                 "web": "No Web",
-                "macAddress": "YOUR_MAC_ADDRESS",
-                "ports": "OPEN_PORTS",
-                "wol": "WOL_PORT"
+                "macAddress": "FF:FF:FF:FF:FF",
+                "ports": "25565",
+                "wol": "7"
         }
         save = json.dumps(Server, indent=4)
         file.write(save)

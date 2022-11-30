@@ -1,0 +1,29 @@
+{
+    "Kaktus": {
+        "name": "Kaktus",
+        "ipAddress": "78.45.152.212",
+        "domain": "minecraft.kaktusgame.eu",
+        "web": "No Web",
+        "macAddress": "1C:69:7A:63:A0:55",
+        "ports": "25565, 25566",
+        "wol": "28"
+    },
+    "test": {
+        "name": "test",
+        "ipAddress": "10.9.3.2",
+        "domain": "No Domain",
+        "web": "No Web",
+        "macAddress": "ff:ff:ff:ff",
+        "ports": "",
+        "wol": "25"
+    },
+    "local": {
+        "name": "Kaktus2",
+        "ipAddress": "10.9.3.2",
+        "domain": "localhost",
+        "web": "No Web",
+        "macAddress": "ff:ff:ff:ff:ff:ff",
+        "ports": "25565, 25566",
+        "wol": "7"
+    }
+}

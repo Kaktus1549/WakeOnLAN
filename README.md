@@ -12,4 +12,4 @@ The program is written in python and uses the following libraries
 + **wakeonlan** -> creates Wake on LAN packets
 
 
-The program stores server information in "**list.JSON**". If this server is not found in the folder where the program itself is, the program creates the folder with basic parameters. To edit the file, you can use the "edit" function of the program, which takes the information and converts it into the correct format, or you can edit it manually. 
+The program stores server information in "**list.JSON**". If this server file is not found in the folder where the program itself is, the program creates the file with basic parameters. To edit the file, you can use the "edit" function of the program, which takes the information and converts it into the correct format, or you can edit it manually. 

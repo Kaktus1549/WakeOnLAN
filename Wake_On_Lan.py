@@ -2,7 +2,6 @@ import time
 from sys import platform
 from colorama import Fore, Back, Style, init
 from termcolor import colored
-from mcstatus import JavaServer
 import shutil
 
 init()
@@ -33,68 +32,34 @@ print(Fore.RESET)
 Server = {}
 
 #classes, functions and variables
-version = "2.0"
+version = "2.7"
 server_up = False
 ssh_up = False
 number = False
 system_platform = platform
 appdata_file = os.getenv('APPDATA')
+current_dir = os.getcwd()
+
 if system_platform == "win32" or system_platform == "win64":
     if not os.path.exists(appdata_file + "\\Server_starter"):
         os.makedirs(appdata_file + "\\Server_starter")
         file_path = appdata_file + "\\Server_starter\\"
     else:
         file_path = appdata_file + "\\Server_starter\\"
-if system_platform == 'linux':
-    if not os.path.exists(appdata_file + "/Server_starter"):
-        os.makedirs(appdata_file + "/Server_starter")
-        file_path = appdata_file + "/Server_starter"
-    else:
-        file_path = appdata_file + "/Server_starter/"
-
+if system_platform == 'linux' or system_platform == "darwin":
+    file_path = current_dir + "/"
 class style:
    BOLD = '\033[1m'
    END = '\033[0m'
 def clear():
      os.system('cls' if os.name=='nt' else 'clear')
      return("   ")
-def network_test(name):
-    global server_up
-
+def sent_wakepacket(ipaddres, macaddres, ports, name):
     clear()
-    print(style.BOLD + "Checking connection to " + name + "...\n" + style.END)
-
-    portsNumber = Server[name]['ports'].split(", ")
-    i = 0
-    
-    while (i <= len(portsNumber) - 1):
-        try:
-            print( "Checking if port " + portsNumber[i] + " is online:")
-            server = JavaServer.lookup(Server[name]['ipAddress'] + ":" + portsNumber[i])
-            server.status()
-            server.ping()
-            server_up = True
-            print(Fore.GREEN + "Port " + portsNumber[i] + " is up!\n" + Fore.RESET)
-        except:
-            print(Fore.RED + "Port " + portsNumber[i] + " is down!\n" + Fore.RESET)
-        i = i + 1
-    if server_up == True:
-        if len(portsNumber) == 1:
-            print("Minecraft server on target server is running you can jon on this IP address!!")
-            print(style.BOLD + "IP address:" + style.END + Server[name]['ipAddress'] + ":" + portsNumber[0])
-        if len(portsNumber) > 1:
-            if Server[name]['web'].lower() == 'no web':
-                    print("At least on Minecraft server is running on target server!")
-                    print("If you want to start another server please contact server admin.")
-            else:
-                print("At least on Minecraft server is online! Visit server web for more info!")
-                print("Website of " + name + " is:" + Server[name]['web'])
-               
-    else:
-        print("Target server is offline!! Sending Wake On LAN packet.")
-        sent_wakepacket(Server[name]['ipAddress'], Server[name]['macAddress'], Server[name]['wol'])
-def sent_wakepacket(ipaddres, macaddres, ports):
-    print("Creating Wake On LAN packet.")
+    print("Sending Wake on LAN packet to server => " + Server[name]['name'] + "\nWith parameters:")
+    print("    - IP address: " + Server[name]['ipAddress'])
+    print("    - Server port: " + Server[name]['wol'])
+    print()
     try:
         send_magic_packet(macaddres, ip_address=ipaddres, port=int(ports))
         print("Wake On LAN packet was sent! Check server in while!")
@@ -111,21 +76,21 @@ def new_JSON():
         else:
             file_path = appdata_file + "\\Server_starter\\"
     if system_platform == 'linux':
-        if not os.path.exists(appdata_file + "/Server_starter"):
-            os.makedirs(appdata_file + "/Server_starter")
-            file_path = appdata_file + "/Server_starter"
+        if not os.path.exists(current_dir + "/Server_starter"):
+            os.makedirs(current_dir + "/Server_starter")
+            file_path = current_dir + "/Server_starter"
         else:
-            file_path = appdata_file + "/Server_starter/"
+            file_path = current_dir + "/Server_starter/"
 
     with open( file_path + 'list.json', 'w') as file:
-        Server['name']={
-                "name": "example_name",
-                "ipAddress": "127.0.0.1",
-                "domain": "example_domain.cz",
+        Server['Kaktus']={
+                "name": "Kaktus",
+                "ipAddress": "78.45.152.212",
+                "domain": "minecraft.kaktusgame.eu",
                 "web": "No Web",
-                "macAddress": "FF:FF:FF:FF:FF",
-                "ports": "25565",
-                "wol": "7"
+                "macAddress": "1C:69:7A:63:A0:55",
+                "ports": "25565, 25566",
+                "wol": "28"
         }
         save = json.dumps(Server, indent=4)
         file.write(save)
@@ -187,7 +152,10 @@ def server_list():
             if yes.lower() == 'ipaddress':
                 print("    - IPv4 address: " + Server[i][yes])
             if yes.lower() == 'domain':
-                print("    - Domain name: " + Server[i][yes])
+                if Server[i][yes].lower() == 'no domain':
+                        print("    - Domain name: This server doesn't have domain name!")
+                else:
+                    print("    - Domain name: " + Server[i][yes])
             if yes.lower() == 'web':
                 if Server[i][yes].lower() == 'no web':
                     print("    - Web address: This server doesn't have website!")
@@ -196,14 +164,14 @@ def server_list():
             if yes.lower() == 'macaddress':
                 print("    - MAC address: " + Server[i][yes])
             if yes.lower() == 'ports':
-                if Server[i][yes].lower() != 'no port':
+                if Server[i][yes].lower() != '':
                     portsNumber = Server[i][yes].split(" ")
                     portsNumber = len(portsNumber)
                     print("    - Number of open Minecraft ports: "+ str(portsNumber))
                 else:
                     print("    - Number of open Minecraft ports: Server doesn't have open ports!")
             if yes.lower() == 'wol':
-                print("    - Wake on LAN port: " + Server[i][yes])
+                print("    - Wake on LAN port: " + Server[i][yes] + "\n\n")
     print(" ")
 def server_on():
     print(style.BOLD + "Chose server from this list:" + style.END)
@@ -214,9 +182,10 @@ def server_on():
         for i in Server:
             if server_for_start.lower() == Server[i]['name'].lower():
                 server_for_start = i
-        network_test(server_for_start)
+        sent_wakepacket(Server[server_for_start]['ipAddress'], Server[server_for_start]['macAddress'], Server[server_for_start]['wol'], server_for_start)
     except:
         print("An error occurred, maybe misspeled server name?")
+
 def editor():
     global number
     
@@ -339,6 +308,7 @@ def editor():
                 if server_for_edit.lower() == Server[i]['name'].lower():
                     server_for_edit = i
                     no = True
+                    break
                 else:
                     no = False
             if no == True:
@@ -469,6 +439,7 @@ def editor():
             }
             save_JSON()
     print("Ending editor session...")
+
 
 print(Fore.YELLOW + "Commands successfully loaded!!")
 

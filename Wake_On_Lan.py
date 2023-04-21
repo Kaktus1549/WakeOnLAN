@@ -6,11 +6,8 @@ import shutil
 
 init()
 
-
 print(Fore.YELLOW + "Starting program.")
-time.sleep(1)
 print(Fore.YELLOW + "Starting program..")
-time.sleep(1)
 print(Fore.YELLOW + "Starting program...")
 
 print(Fore.YELLOW + "Loading libaries.")
@@ -47,24 +44,30 @@ if system_platform == "win32" or system_platform == "win64":
     else:
         file_path = appdata_file + "\\Server_starter\\"
 if system_platform == 'linux' or system_platform == "darwin":
-    file_path = current_dir + "/"
+    home_path = os.path.expanduser('~') + "/"
+    if not os.path.exists(home_path + "Server_starter"):
+        os.makedirs(home_path + "Server_starter")
+        file_path = home_path + "Server_starter/"
+    else:
+        file_path = home_path + "Server_starter/"
 class style:
    BOLD = '\033[1m'
    END = '\033[0m'
 def clear():
      os.system('cls' if os.name=='nt' else 'clear')
      return("   ")
-def sent_wakepacket(ipaddres, macaddres, ports, name):
+def sent_wakepacket(name):
     clear()
     print("Sending Wake on LAN packet to server => " + Server[name]['name'] + "\nWith parameters:")
     print("    - IP address: " + Server[name]['ipAddress'])
+    ipaddres = Server[name]['ipAddress']
     print("    - Server port: " + Server[name]['wol'])
+    ports = Server[name]['wol']
+    macaddres = Server[name]['macAddress']
     print()
-    try:
-        send_magic_packet(macaddres, ip_address=ipaddres, port=int(ports))
-        print("Wake On LAN packet was sent! Check server in while!")
-    except:
-        print("An error occurred, maybe a wrong MAC address? If not, please report this error with the procedure (what you did before it happened)")
+    send_magic_packet(macaddres, ip_address=ipaddres, port=int(ports))
+    print("Wake On LAN packet was sent! Check server in while!")
+
 def new_JSON():
     print(colored("JSON file wasn't found!! ", 'yellow', 'on_red'))
     time.sleep(1)
@@ -75,22 +78,23 @@ def new_JSON():
             file_path = appdata_file + "\\Server_starter\\"
         else:
             file_path = appdata_file + "\\Server_starter\\"
-    if system_platform == 'linux':
-        if not os.path.exists(current_dir + "/Server_starter"):
-            os.makedirs(current_dir + "/Server_starter")
-            file_path = current_dir + "/Server_starter"
+    if system_platform == 'linux' or system_platform == 'darwin':
+        home_path = os.path.expanduser('~') + "/"
+        if not os.path.exists(home_path + "/Server_starter"):
+            os.makedirs(home_path + "/Server_starter")
+            file_path = home_path + "/Server_starter/"
         else:
-            file_path = current_dir + "/Server_starter/"
+            file_path = home_path + "/Server_starter/"
 
     with open( file_path + 'list.json', 'w') as file:
-        Server['Kaktus']={
-                "name": "Kaktus",
-                "ipAddress": "78.45.152.212",
-                "domain": "minecraft.kaktusgame.eu",
+        Server['default']={
+                "name": "Default",
+                "ipAddress": "127.0.0.1",
+                "domain": "No Domain",
                 "web": "No Web",
-                "macAddress": "1C:69:7A:63:A0:55",
-                "ports": "25565, 25566",
-                "wol": "28"
+                "macAddress": "FF:FF:FF:FF:FF:FF",
+                "ports": "",
+                "wol": "9"
         }
         save = json.dumps(Server, indent=4)
         file.write(save)
@@ -111,7 +115,6 @@ def remove_JSON():
         shutil.rmtree(file_path)
     else:
         print("JSON file was already removed!")
-
 
 #commands
 print(Fore.YELLOW + "Loading internal program commands...")
@@ -175,17 +178,14 @@ def server_list():
     print(" ")
 def server_on():
     print(style.BOLD + "Chose server from this list:" + style.END)
-    try:
-        for i in Server:
-            print("    - " + Server[i]['name'])
-        server_for_start = input("Server: ").lower()
-        for i in Server:
-            if server_for_start.lower() == Server[i]['name'].lower():
-                server_for_start = i
-        sent_wakepacket(Server[server_for_start]['ipAddress'], Server[server_for_start]['macAddress'], Server[server_for_start]['wol'], server_for_start)
-    except:
-        print("An error occurred, maybe misspeled server name?")
 
+    for i in Server:
+        print("    - " + Server[i]['name'])
+    server_for_start = input("Server: ").lower()
+    for i in Server:
+        if server_for_start.lower() == Server[i]['name'].lower():
+            server_for_start = i
+    sent_wakepacket(server_for_start)
 def editor():
     global number
     
@@ -440,7 +440,6 @@ def editor():
             save_JSON()
     print("Ending editor session...")
 
-
 print(Fore.YELLOW + "Commands successfully loaded!!")
 
 #JSON file with server info
@@ -453,9 +452,8 @@ except:
     new_JSON()
 
 print(Fore.GREEN + "JSON file was succesfully loaded into memory!!")
-time.sleep(2)
 print(Fore.MAGENTA + "Program was successfully started! Enjoy!!\n")
-time.sleep(5)
+time.sleep(3)
 clear()
 print(colored("""
 WARNING!!!
@@ -472,7 +470,6 @@ while True:
     random_output = input()
     break
 print("In case you dont know what to do use \"HELP\" command (no matter the size of the letters)")    
-
 
 while True:
 
@@ -508,13 +505,10 @@ while True:
     else:
         print(Fore.RESET + style.END + "\nYou entered unknown command!\n")
 
-
 print(Fore.GREEN + "\nSaving program files...")
-time.sleep(2)
 
 print("Saved JSON file...")
 save_JSON()
-time.sleep(2)
 
 print("Unloading program variables from memory...")
 print(style.BOLD + Fore.LIGHTGREEN_EX + "Program was succesfully saved!")

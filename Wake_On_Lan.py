@@ -90,10 +90,7 @@ def new_JSON():
         Server['default']={
                 "name": "Default",
                 "ipAddress": "127.0.0.1",
-                "domain": "No Domain",
-                "web": "No Web",
                 "macAddress": "FF:FF:FF:FF:FF:FF",
-                "ports": "",
                 "wol": "9"
         }
         save = json.dumps(Server, indent=4)
@@ -146,33 +143,16 @@ def command_list():
 def current_version():
     print(style.BOLD + """
 Current version of program is --> """ + version + style.END + "\n")
-def server_list():
+def server_list(): 
 
     for i in Server:
-        print(style.BOLD + Server[i]['name'] + style.END)
+        print("Detail information of server => " + style.BOLD + Server[i]['name'] + style.END)
         print(" ")
         for yes in Server[i]:
             if yes.lower() == 'ipaddress':
                 print("    - IPv4 address: " + Server[i][yes])
-            if yes.lower() == 'domain':
-                if Server[i][yes].lower() == 'no domain':
-                        print("    - Domain name: This server doesn't have domain name!")
-                else:
-                    print("    - Domain name: " + Server[i][yes])
-            if yes.lower() == 'web':
-                if Server[i][yes].lower() == 'no web':
-                    print("    - Web address: This server doesn't have website!")
-                else:
-                    print("    - Web address: " + Server[i][yes])
             if yes.lower() == 'macaddress':
-                print("    - MAC address: " + Server[i][yes])
-            if yes.lower() == 'ports':
-                if Server[i][yes].lower() != '':
-                    portsNumber = Server[i][yes].split(" ")
-                    portsNumber = len(portsNumber)
-                    print("    - Number of open Minecraft ports: "+ str(portsNumber))
-                else:
-                    print("    - Number of open Minecraft ports: Server doesn't have open ports!")
+                print("    - MAC adress: " + Server[i][yes])
             if yes.lower() == 'wol':
                 print("    - Wake on LAN port: " + Server[i][yes] + "\n\n")
     print(" ")
@@ -210,24 +190,14 @@ def editor():
     if choise == "2":
         clear()
         print("For adding new server to the list you are gonna need to know some basic info about server.")
-        print("Information with \"*\" in the end can be left empty.")
         print("\n")
         server_name = input("Enter server name:")
         server_ip_address = input("Enter server IPv4 address:")
-        server_domain = input("Enter server domain" + style.BOLD + "*" + style.END + ":")
-        server_web = input("Enter server web address (URL address)" + style.BOLD + "*" + style.END + ":")
         server_MAC = input("Enter MAC address of server:")
-        server_ports = input("Enter Minecraft ports" + style.BOLD + "*" + style.END + ":")
         server_wol_port = input("Enter port of Wake on LAN:")
         print("\n")
         print(Fore.YELLOW + "Processing given information..")
-        print("Filtering empty outputs..." + Fore.RESET)
-        if server_ports == "":
-            server_ports == "No Port"
-        if server_domain == "":
-            server_domain = "No Domain"
-        if server_web == "":
-            server_web = "No Web"
+        print("Processing empty inputs..." + Fore.RESET)
         if server_name == "":
             while True:
                 print("You entered blank server name, try again")
@@ -271,10 +241,7 @@ def editor():
         Server[server_name] ={
             "name": server_name,
             "ipAddress": server_ip_address,
-            "domain": server_domain,
-            "web": server_web,
             "macAddress": server_MAC,
-            "ports": server_ports,
             "wol": server_wol_port
         }
         print("New server appended succesfully!")
@@ -323,27 +290,12 @@ def editor():
                     print(style.BOLD +"    1) Name: " + style.END + Server[server_for_edit][yes])
                 if yes.lower() == 'ipaddress':
                     print(style.BOLD +"    2) IPv4 address: " + style.END + Server[server_for_edit][yes])
-                if yes.lower() == 'domain':
-                    if Server[server_for_edit][yes].lower() == 'no domain':
-                        print(style.BOLD +"    3) Domain name: " + style.END +"This server doesn't have domain!")
-                    else:
-                        print(style.BOLD +"    3) Domain name: " + style.END + Server[server_for_edit][yes])
-                if yes.lower() == 'web':
-                    if Server[server_for_edit][yes].lower() == 'no web':
-                        print(style.BOLD +"    4) Web address: " + style.END +"This server doesn't have website!")
-                    else:
-                        print(style.BOLD +"    4) Web address: " + style.END + Server[server_for_edit][yes])
                 if yes.lower() == 'macaddress':
-                    print(style.BOLD +"    5) MAC address: " + style.END + Server[server_for_edit][yes])
-                if yes.lower() == 'ports':
-                    if Server[server_for_edit][yes].lower() == "no port":
-                            print(style.BOLD +"    6) Minecraft ports: " + style.END + "Server doesn't have any Minecraft port!")
-                    else:    
-                        print(style.BOLD +"    6) Minecraft ports: " + style.END + Server[server_for_edit][yes])
+                    print(style.BOLD +"    3) MAC address: " + style.END + Server[server_for_edit][yes])
                 if yes.lower() == 'wol':
-                    print(style.BOLD +"    7) Wake on LAN port: " + style.END + Server[server_for_edit][yes])
+                    print(style.BOLD +"    4) Wake on LAN port: " + style.END + Server[server_for_edit][yes])
                 
-            print("    8) End session")
+            print(style.BOLD + "    5) End session" + style.END)
             edit = input("Your choise: ")
             while True:
                 if edit.isdigit():
@@ -386,18 +338,6 @@ def editor():
             else:
                 new_IP = Server[server_for_edit]['ipAddress']
             if edit == '3':
-                new_domain = input("Enter new domain address: ")
-                if new_domain == "":
-                    new_domain = "No Domain"
-            else:
-                new_domain = Server[server_for_edit]['domain']
-            if edit == '4':
-                new_web = input("Enter new web address:")
-                if new_web == "":
-                    new_web = "No Web"
-            else:
-                new_web = Server[server_for_edit]['web']
-            if edit == '5':
                 new_MAC = input("Enter new MAC address:")
                 while True:
                     if new_MAC == "":
@@ -407,14 +347,7 @@ def editor():
                         break
             else:
                 new_MAC = Server[server_for_edit]['macAddress']
-            if edit == '6':
-                print("Enter new ports")
-                new_ports = input("If there is more than one, seperate them by space: ")
-                if new_ports == "":
-                    new_ports = "No Port"
-            else:
-                new_ports = Server[server_for_edit]['ports']
-            if edit == '7':
+            if edit == '4':
                 new_WOL = input("Enter new Wake on LAN port: ")
                 while True:
                     if new_WOL.isdigit() == False or new_WOL == "":
@@ -424,17 +357,14 @@ def editor():
                         break
             else:
                 new_WOL = Server[server_for_edit]['wol']
-            if edit == '8':
+            if edit == '5':
                 break     
             print("Processing and saving edited informations..")
 
             Server[server_for_edit] ={
                 "name": new_name,
                 "ipAddress": new_IP,
-                "domain": new_domain,
-                "web": new_web,
                 "macAddress": new_MAC,
-                "ports": new_ports,
                 "wol": new_WOL
             }
             save_JSON()

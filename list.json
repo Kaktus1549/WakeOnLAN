@@ -5,7 +5,7 @@
         "domain": "www.domainofserver1.com", // If there isnt domain leave "No Domain"
         "web": "No Web",  // "No Web" means that server doesnt have any website
         "macAddress": "FF:FF:FF:FF:FF:FF", 
-        "ports": "25565, 25566", // In case there are no porst leave "No port". If there is more ports, seperate them by " ,"
+        "ports": "25565, 25566", // In case there are no porst leave "No port" or just "". If there is more ports, seperate them by " ,"
         "wol": "7" // default port of WOL is 7
     }
 }
